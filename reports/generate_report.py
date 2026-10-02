@@ -188,7 +188,7 @@ def build_pdf_report(pdf_filename: str):
     story.append(Paragraph(
         "<b>Department of Computer Science — Machine Learning Operations (MLOps) — Fall 2026</b><br/>"
         "<b>Assignment 01 Report: MLOps Task with CI/CD, MLflow & Makefile Automation</b><br/>"
-        "<b>Student Roll Number:</b> 22F-3150 &nbsp;|&nbsp; <b>Marks:</b> 100 &nbsp;|&nbsp; <b>Status:</b> Complete",
+        "<b>Student Roll Number:</b> 22F-3152 &nbsp;|&nbsp; <b>Marks:</b> 100 &nbsp;|&nbsp; <b>Status:</b> Complete",
         subtitle_style
     ))
     story.append(Spacer(1, 4))
@@ -356,5 +356,5 @@ def build_pdf_report(pdf_filename: str):
 
 
 if __name__ == "__main__":
-    out_pdf = os.path.join(REPORTS_DIR, "MLOps_A01_22F-3150.pdf")
+    out_pdf = os.path.join(REPORTS_DIR, "MLOps_A01_22F-3152.pdf")
     build_pdf_report(out_pdf)
