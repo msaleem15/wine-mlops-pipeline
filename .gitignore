@@ -1,0 +1,40 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# MLflow tracking and database artifacts
+mlruns/
+mlruns.db
+mlflow.db
+mlartifacts/
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Transient model artifacts and cache
+*.pkl
+*.joblib
+*.model
+models/*.pkl
+models/*.joblib
+!data/.gitkeep
+
+# IDE and OS files
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
