@@ -1,6 +1,6 @@
 # Wine Cultivar Classification: MLOps Pipeline with CI/CD & MLflow
 
-![CI/CD MLOps Quality Gate](https://github.com/USER/wine-mlops-pipeline/actions/workflows/ci.yml/badge.svg)
+![CI/CD MLOps Quality Gate](https://github.com/msaleem15/wine-mlops-pipeline/actions/workflows/ci.yml/badge.svg)
 ![Python Version](https://img.shields.io/badge/python-3.10%20%7C%203.14-blue)
 ![MLflow Tracking](https://img.shields.io/badge/MLflow-v3.16-brightgreen)
 ![Scikit-Learn](https://img.shields.io/badge/scikit--learn-v1.9-orange)
@@ -137,7 +137,7 @@ The workflow (`.github/workflows/ci.yml`) triggers on every `push` and `pull_req
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/<USERNAME>/wine-mlops-pipeline.git
+git clone https://github.com/msaleem15/wine-mlops-pipeline.git
 cd wine-mlops-pipeline
 
 # 2. Install dependencies
