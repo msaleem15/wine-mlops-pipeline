@@ -16,7 +16,7 @@ from mlflow.tracking import MlflowClient  # noqa: E402
 
 from src.data import load_and_split_data  # noqa: E402
 
-EXPERIMENT_NAME = "Wine-Cultivar-Classification-Production-Main"
+EXPERIMENT_NAME = "Wine-Cultivar-Classification"
 REGISTERED_MODEL_NAME = "WineClassifier"
 CHAMPION_ALIAS = "champion"
 DEFAULT_DB_FILE = "mlflow.db"
