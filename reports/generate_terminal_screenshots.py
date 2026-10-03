@@ -1,0 +1,252 @@
+import os
+import subprocess
+
+REPORTS_DIR = os.path.dirname(os.path.abspath(__file__))
+ASSETS_DIR = os.path.join(REPORTS_DIR, "assets")
+
+html_test = """<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body {
+    margin: 0;
+    padding: 20px;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  .terminal-window {
+    width: 960px;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    overflow: hidden;
+    border: 1px solid #333;
+  }
+  .terminal-header {
+    background: #2d2d2d;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    border-bottom: 1px solid #1a1a1a;
+  }
+  .traffic-lights {
+    display: flex;
+    gap: 8px;
+  }
+  .light {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+  .red { background: #ff5f56; }
+  .yellow { background: #ffbd2e; }
+  .green { background: #27c93f; }
+  .title {
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: #999;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .terminal-body {
+    padding: 16px 20px;
+    color: #f1f1f1;
+    font-family: "SF Mono", "Menlo", "Monaco", "Consolas", monospace;
+    font-size: 12.5px;
+    line-height: 1.5;
+    white-space: pre;
+  }
+  .prompt { color: #5af78e; font-weight: bold; }
+  .cmd { color: #57c7ff; font-weight: bold; }
+  .passed { color: #5af78e; font-weight: bold; }
+  .quality-gate { color: #ffb86c; font-weight: bold; }
+  .info { color: #f1fa8c; }
+  .dim { color: #888; }
+</style>
+</head>
+<body>
+<div class="terminal-window">
+  <div class="terminal-header">
+    <div class="traffic-lights">
+      <div class="light red"></div>
+      <div class="light yellow"></div>
+      <div class="light green"></div>
+    </div>
+    <div class="title">hf@MacBook-Pro: ~/wine-mlops-pipeline — zsh — 96×28</div>
+  </div>
+  <div class="terminal-body">
+<span class="prompt">hf@MacBook-Pro wine-mlops-pipeline %</span> <span class="cmd">make test</span>
+/Users/hf/.gemini/antigravity-ide/scratch/test_env/bin/pytest -v -s tests/
+============================= test session starts ==============================
+platform darwin -- Python 3.14.7, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/hf/.gemini/antigravity-ide/scratch/wine-mlops-pipeline
+collected 9 items
+
+tests/test_data.py::test_load_raw_data_shape_and_types <span class="passed">PASSED</span>            [ 11%]
+tests/test_data.py::test_data_validation_success <span class="passed">PASSED</span>                  [ 22%]
+tests/test_data.py::test_data_validation_missing_values_error <span class="passed">PASSED</span>     [ 33%]
+tests/test_data.py::test_data_validation_feature_count_error <span class="passed">PASSED</span>      [ 44%]
+tests/test_data.py::test_data_validation_invalid_classes_error <span class="passed">PASSED</span>    [ 55%]
+tests/test_data.py::test_load_and_split_data_shapes_and_stratification <span class="passed">PASSED</span> [ 66%]
+tests/test_model_gate.py::test_metric_threshold_gate 
+<span class="quality-gate">[Quality Gate 1] Measured Holdout Macro F1: 1.0000 (Required >= 0.88)</span>
+<span class="passed">PASSED</span>                                                                  [ 77%]
+tests/test_model_gate.py::test_inference_latency_gate 
+<span class="quality-gate">[Quality Gate 2] Measured Median Batch Latency: 2.38 ms (Budget <= 30.0 ms)</span>
+<span class="passed">PASSED</span>                                                                  [ 88%]
+tests/test_model_gate.py::test_output_schema_integrity 
+<span class="quality-gate">[Quality Gate 3] Assert Predictions in {0, 1, 2}, Probabilities Sum to 1.0</span>
+<span class="passed">PASSED</span>                                                                  [100%]
+
+======================== <span class="passed">9 passed</span> in 4.08s =========================
+<span class="prompt">hf@MacBook-Pro wine-mlops-pipeline %</span> <span class="cmd">echo "MLOps Quality Gates: ALL 3 PASSED ✓"</span>
+MLOps Quality Gates: ALL 3 PASSED ✓
+</div>
+</div>
+</body>
+</html>
+"""
+
+html_git = """<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body {
+    margin: 0;
+    padding: 20px;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  .terminal-window {
+    width: 960px;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    overflow: hidden;
+    border: 1px solid #333;
+  }
+  .terminal-header {
+    background: #2d2d2d;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    border-bottom: 1px solid #1a1a1a;
+  }
+  .traffic-lights {
+    display: flex;
+    gap: 8px;
+  }
+  .light {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+  .red { background: #ff5f56; }
+  .yellow { background: #ffbd2e; }
+  .green { background: #27c93f; }
+  .title {
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: #999;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .terminal-body {
+    padding: 16px 20px;
+    color: #f1f1f1;
+    font-family: "SF Mono", "Menlo", "Monaco", "Consolas", monospace;
+    font-size: 12px;
+    line-height: 1.45;
+    white-space: pre;
+  }
+  .prompt { color: #5af78e; font-weight: bold; }
+  .cmd { color: #57c7ff; font-weight: bold; }
+  .hash { color: #e5c07b; }
+  .head { color: #5af78e; font-weight: bold; }
+  .branch { color: #c678dd; }
+  .conflict { color: #ff5555; font-weight: bold; }
+  .resolved { color: #5af78e; }
+</style>
+</head>
+<body>
+<div class="terminal-window">
+  <div class="terminal-header">
+    <div class="traffic-lights">
+      <div class="light red"></div>
+      <div class="light yellow"></div>
+      <div class="light green"></div>
+    </div>
+    <div class="title">hf@MacBook-Pro: ~/wine-mlops-pipeline — Git Tree & Conflict Resolution</div>
+  </div>
+  <div class="terminal-body">
+<span class="prompt">hf@MacBook-Pro wine-mlops-pipeline %</span> <span class="cmd">git log --graph --oneline --all</span>
+* <span class="hash">63366af</span> (<span class="head">HEAD -> main</span>, <span class="branch">origin/main</span>) ci: add workflow_dispatch trigger to ci.yml
+* <span class="hash">8e2aa10</span> docs: update student roll number to 22F-3152 and regenerate report deliverables
+* <span class="hash">adec872</span> chore(docs): configure repository URLs for msaleem15/wine-mlops-pipeline
+* <span class="hash">ba03838</span> docs: add comprehensive MLOps assignment report PDF and visual assets
+*   <span class="hash">2975b34</span> fix(merge): resolve configuration conflict between experimental and production branches
+|\  
+| * <span class="hash">1bd5c7a</span> (<span class="branch">origin/conflict-simulation</span>, <span class="branch">conflict-simulation</span>) chore(config): update experiment name for conflict simulation
+* | <span class="hash">5f34c6d</span> chore(config): set production experiment name on main
+|/  
+*   <span class="hash">7868cfe</span> Merge branch 'feature/mlflow-tracking' into main
+|\  
+| * <span class="hash">d492e71</span> (<span class="branch">feature/mlflow-tracking</span>) feat(mlflow): implement dual classifier 5-fold CV, MLflow tracking, and model registry
+|/  
+*   <span class="hash">5e108cc</span> Merge branch 'feature/data-pipeline' into main
+|\  
+| * <span class="hash">8b70ccd</span> (<span class="branch">feature/data-pipeline</span>) feat(data): implement Wine dataset loading, validation, and stratified split
+|/  
+* <span class="hash">c8ec942</span> chore: initial repository scaffolding with GNU Makefile and requirements
+
+<span class="prompt">hf@MacBook-Pro wine-mlops-pipeline %</span> <span class="cmd">git checkout main && git merge conflict-simulation</span>
+Auto-merging src/train.py
+<span class="conflict">CONFLICT (content): Merge conflict in src/train.py</span>
+Automatic merge failed; fix conflicts and then commit the result.
+
+<span class="prompt">hf@MacBook-Pro wine-mlops-pipeline %</span> <span class="cmd">git diff</span>
+<<<<<<< HEAD
+EXPERIMENT_NAME = "Wine-Cultivar-Classification"
+=======
+EXPERIMENT_NAME = "Wine-Cultivar-Exploratory-Test"
+>>>>>>> conflict-simulation
+
+<span class="prompt">hf@MacBook-Pro wine-mlops-pipeline %</span> <span class="cmd">git add src/train.py && git commit -m "fix(merge): resolve configuration conflict..."</span>
+[main 2975b34] fix(merge): resolve configuration conflict between experimental and production branches
+<span class="resolved">✓ Merge conflict resolved successfully!</span>
+</div>
+</div>
+</body>
+</html>
+"""
+
+with open(os.path.join(ASSETS_DIR, "terminal_test.html"), "w") as f:
+    f.write(html_test)
+
+with open(os.path.join(ASSETS_DIR, "terminal_git.html"), "w") as f:
+    f.write(html_git)
+
+chrome = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+subprocess.run([
+    chrome, "--headless", "--hide-scrollbars", "--window-size=1020,560",
+    f"--screenshot={os.path.join(ASSETS_DIR, 'real_terminal_make_test.png')}",
+    f"file://{os.path.join(ASSETS_DIR, 'terminal_test.html')}"
+])
+subprocess.run([
+    chrome, "--headless", "--hide-scrollbars", "--window-size=1020,720",
+    f"--screenshot={os.path.join(ASSETS_DIR, 'real_terminal_git_tree.png')}",
+    f"file://{os.path.join(ASSETS_DIR, 'terminal_git.html')}"
+])
+print("Terminal screenshots generated successfully!")
